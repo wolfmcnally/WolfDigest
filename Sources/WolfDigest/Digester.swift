@@ -52,16 +52,22 @@ public struct Digester {
         combine(Array(set).sorted(by: { $0.digest!.lexicographicallyPrecedes($1.digest!) }))
     }
     
+    public mutating func combine<S>(_ value: S) where S : Serializable {
+        combine(data: value.serialized)
+    }
+    
+    mutating func combine(_ array: [Any]) {
+        array.forEach { combine(data: ($0 as! Serializable).serialized) }
+    }
+    
+    public mutating func combine(_ items: Serializable...) {
+        combine(items)
+    }
+
     func finalize() -> Digest? {
         guard !buf.isEmpty else {
             return nil
         }
         return Digest(buf.sha256Digest)
-    }
-}
-
-extension Digester {
-    public mutating func combine<I>(_ value: I) where I : FixedWidthInteger {
-        combine(data: value.data)
     }
 }

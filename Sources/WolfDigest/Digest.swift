@@ -17,6 +17,7 @@
 //  SOFTWARE.
 
 import Foundation
+import WolfBase
 
 public struct Digest {
     private let data: Data
@@ -52,5 +53,11 @@ extension Digest: Sequence {
 extension Digest: CustomStringConvertible {
     public var description: String {
         data.hex
+    }
+}
+
+extension Digest: Serializable {
+    public var serialized: Data {
+        data
     }
 }
